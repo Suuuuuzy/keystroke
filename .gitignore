@@ -1,0 +1,9 @@
+/node_modules
+
+/build
+
+.DS_store
+
+/images
+
+/__pycache__
