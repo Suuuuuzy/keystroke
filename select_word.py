@@ -1,8 +1,10 @@
 import csv
 import os
 import sys
+import zipfile
 
-WORDLEN = 12
+
+WORDLEN = 2
 DATACOUNT = 20
 WORDINFILE = 1
 
@@ -81,6 +83,9 @@ def find_in_features(source_filepath, dic):
         
 
 def main():
+    z = zipfile.ZipFile('origin_dataset/features.csv.zip','r')
+    z.extract('features.csv', path='origin_dataset/', pwd=None)
+
     dic = find_word('origin_dataset/text.csv')
     find_in_features('origin_dataset/features.csv', dic)
 
