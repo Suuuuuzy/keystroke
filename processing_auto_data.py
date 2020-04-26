@@ -22,7 +22,7 @@ def TimeFPS(filename, startTime, stopTime):
     for index in range(int(len(contents)/2)):
         tmp = contents[index*2]
         tmpTime = int(tmp)
-        if(tmpTime in range(startTime-100, stopTime+300)):
+        if(tmpTime in range(startTime-500, stopTime+300)):
             time.append(tmpTime)
             tmp = contents[index*2+1]
             i = float(tmp)
