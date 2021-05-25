@@ -9,3 +9,8 @@
 /__pycache__
 
 /origin_dataset/features.csv
+
+keystroke_plan.md
+data_back/
+keystroke_dataset/test/
+keystroke_dataset/old/

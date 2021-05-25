@@ -4,8 +4,8 @@ import sys
 import zipfile
 
 
-WORDLEN = 13
-DATACOUNT = 100
+WORDLEN = 14
+DATACOUNT = 2
 WORDWITHLEN = 3
 
 # find some highly used words

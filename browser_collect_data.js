@@ -3,6 +3,7 @@ var robot = require("robotjs");
 // set no delay after keypress
 robot.setKeyboardDelay(0);
 robot.setMouseDelay(2);
+var path = require('path');
 
 
 function sleep(ms) {
@@ -37,16 +38,16 @@ async function tableCallback(table){
         // console.log('delaying 10s...please switch to search box');
         // await sleep(10000);
         // for each sample in sample, deal with time
-        var screenSize = robot.getScreenSize();
-        console.log(screenSize);
-        var mouse = robot.getMousePos();
-        console.log('mouse position', mouse);
+        // var screenSize = robot.getScreenSize();
+        // console.log(screenSize);
+        // var mouse = robot.getMousePos();
+        // console.log('mouse position', mouse);
         for (var i = 0; i<samples.length; i++){
             var LETTER = samples[i].LETTER;
-            console.log(samples[i].PRESS_TIME);
-            console.log(LETTER);
+            // console.log(samples[i].PRESS_TIME);
+            // console.log(LETTER);
             // switch to right
-            await robot.moveMouse(1200, 700);
+            await robot.moveMouse(700, 700);
             await robot.mouseClick();
             await sleep(1000);
             // clear box   // 800, 160  
@@ -55,36 +56,37 @@ async function tableCallback(table){
             // robot.keyToggle("a", "down", ["command"]);
             // robot.keyToggle("a", "up", ["command"]);
             await robot.keyTap("backspace");
-            console.log('delete contents');
+            // console.log('delete contents');
             // switch to left
-            await robot.moveMouse(400, 700);
+            await robot.moveMouse(20, 700);
             await robot.mouseClick();
             await sleep(1000);
             // start recording
             // TODO: send signal to aq server! // 25, 550
             await robot.moveMouse(25, 550);
             await robot.mouseClick();
-            console.log('start Timing');
+            // console.log('start Timing');
             // input word
             await robot.moveMouse(800, 160);
             await robot.mouseClick();
             await input_word(samples[i].PRESS_TIME, LETTER);
-            console.log('delaying 1s...please stop, save file');
+            await console.log(LETTER.join('') + ' ' + i + ' ' + Date.now());
+            // console.log('delaying 1s...please stop, save file');
             await sleep(1000);
             // switch to left
-            await robot.moveMouse(400, 700);
+            await robot.moveMouse(20, 700);
             await robot.mouseClick();
             await sleep(1000);
             // stop recording
             // TODO: send signal to aq server! // 125, 550
             await robot.moveMouse(125, 550);
             await robot.mouseClick();
-            console.log('stop Timing');
+            // console.log('stop Timing');
         }
     } finally {
-      console.log('finish');
+      console.log(word, ' data collection finished');
     }
-    console.log('read table finished');
+    // console.log('read table finished');
 }
 
 function ConvertToTable(data, callBack) {
@@ -92,7 +94,8 @@ function ConvertToTable(data, callBack) {
   var table = new Array();
   var rows = new Array();
   rows = data.split("\n");
-  for (var i = 0; i < rows.length; i++) {
+  // last row is a '\n', discard it
+  for (var i = 0; i < rows.length-1; i++) {
       table.push(rows[i].split(",")); // one row, one word
   }
   callBack(table);
@@ -113,7 +116,7 @@ function Main(fileName){
 async function input_word(PRESS_TIME, LETTER) {
   var realTime = [];
   try {
-    await sleep(5000); // let FPS of canvas go steadily
+    await sleep(3000); // let FPS of canvas go steadily
     // send every key except the last key
     for(var i = 0; i<PRESS_TIME.length-1; i++){
         await robot.keyTap(LETTER[i]);
@@ -132,11 +135,29 @@ async function input_word(PRESS_TIME, LETTER) {
       fs.mkdirSync(path) 
     fs.writeFile( path + '/' + realTime[0] + '.txt', realTime + '$' + LETTER, (err) => {
       if (err) throw err;
-      console.log(LETTER.join('') + ' is saved!');
+      // console.log(LETTER.join('') + ' ' + i + ' ' + Date.now());
     });
   }
 };
 
+// filepath = 'keystroke_dataset/'
+// fs.readdir(filepath, function(err, files){
+//   if(err){
+//     console.warn(err);
+//   }else{
+//     files.forEach(function(filename){
+//       if (filename.endsWith('.csv')){
+//         console.log(filename);
+//         words = filename.split('_')[1];
+//         word = words.split('.')[0];
+//         console.log(word);
+//         await Main(path.join(filepath, filename));
+//       }
+//     });
+//   }
+// });
 keystrokeFile = 'keystroke_dataset/data_' +word + '.csv'
 
 Main(keystrokeFile);
+
+
