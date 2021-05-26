@@ -1,4 +1,6 @@
 /node_modules
+collect_test.js
+browser_data/
 
 /build
 
